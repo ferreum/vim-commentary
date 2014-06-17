@@ -14,7 +14,7 @@ function! s:surroundings() abort
         \ ,'\S\zs%s',' %s','') ,'%s\ze\S', '%s ', ''), '%s', 1)
 endfunction
 
-function! s:go(type,...) abort
+function! commentary#go(type,...) abort
   if a:0
     let [lnum1, lnum2] = [a:type, a:1]
   else
@@ -73,9 +73,14 @@ function! s:textobject(inner) abort
   endif
 endfunction
 
-xnoremap <silent> <Plug>Commentary     :<C-U>call <SID>go(line("'<"),line("'>"))<CR>
-nnoremap <silent> <Plug>Commentary     :<C-U>set opfunc=<SID>go<CR>g@
-nnoremap <silent> <Plug>CommentaryLine :<C-U>set opfunc=<SID>go<Bar>exe 'norm! 'v:count1.'g@_'<CR>
+function! <SID>operator() abort
+  set opfunc=commentary#go
+  return 'g@'
+endfunction
+
+xnoremap <silent> <Plug>Commentary     :<C-U>call commentary#go(line("'<"),line("'>"))<CR>
+nnoremap <expr>   <Plug>Commentary     <SID>operator()
+nnoremap <silent> <Plug>CommentaryLine :<C-U>set opfunc=commentary#go<Bar>exe 'norm! 'v:count1.'g@_'<CR>
 onoremap <silent> <Plug>Commentary        :<C-U>call <SID>textobject(0)<CR>
 nnoremap <silent> <Plug>ChangeCommentary c:<C-U>call <SID>textobject(1)<CR>
 nmap <silent> <Plug>CommentaryUndo <Plug>Commentary<Plug>Commentary
