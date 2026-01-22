@@ -76,7 +76,7 @@ function! s:go(...) abort
     elseif uncomment
       let line = substitute(line,'\S.*\s\@<!','\=submatch(0)[strlen(l):-strlen(r)-1]','')
     else
-      let line = substitute(line,'^\%(\s\{'.minindent.'}\|\s*\)\zs.*\S\@<=','\=l.submatch(0).r','')
+      let line = substitute(line,'^\%(\s\{'.minindent.'}\|\s*\)\zs','\=l.submatch(0).r','')
     endif
     call add(lines, line)
   endfor
