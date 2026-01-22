@@ -37,8 +37,18 @@ function! s:go(...) abort
   let [l, r] = s:surroundings()
   let uncomment = 2
   let force_uncomment = a:0 > 2 && a:3
+  let minindent = -1
   for lnum in range(lnum1,lnum2)
-    let line = matchstr(getline(lnum),'\S.*\s\@<!')
+    let line = getline(lnum)
+
+    let spacematch = matchstr(line, '^\s*')
+    if spacematch !=# line
+      if minindent < 0 || len(spacematch) < minindent
+        let minindent = len(spacematch)
+      endif
+    endif
+
+    let line = matchstr(line,'\S.*\s\@<!')
     let [l, r] = s:strip_white_space(l,r,line)
     if len(line) && (stridx(line,l) || line[strlen(line)-strlen(r) : -1] != r)
       let uncomment = 0
@@ -66,7 +76,7 @@ function! s:go(...) abort
     elseif uncomment
       let line = substitute(line,'\S.*\s\@<!','\=submatch(0)[strlen(l):-strlen(r)-1]','')
     else
-      let line = substitute(line,'^\%('.matchstr(getline(lnum1),indent).'\|\s*\)\zs.*\S\@<=','\=l.submatch(0).r','')
+      let line = substitute(line,'^\%(\s\{'.minindent.'}\|\s*\)\zs.*\S\@<=','\=l.submatch(0).r','')
     endif
     call add(lines, line)
   endfor
