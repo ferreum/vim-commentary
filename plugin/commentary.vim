@@ -50,7 +50,7 @@ function! s:go(...) abort
 
     let line = matchstr(line,'\S.*\s\@<!')
     let [l, r] = s:strip_white_space(l,r,line)
-    if len(line) && (stridx(line,l) || line[strlen(line)-strlen(r) : -1] != r)
+    if len(line) && (stridx(line,trim(l,"",2)) || line[strlen(line)-strlen(r) : -1] != r)
       let uncomment = 0
     endif
   endfor
