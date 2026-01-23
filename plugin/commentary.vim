@@ -98,8 +98,8 @@ endfunction
 function! s:textobject(inner) abort
   let [l, r] = s:surroundings()
   let lnums = [line('.')+1, line('.')-2]
-  for [index, dir, bound, line] in [[0, -1, 1, ''], [1, 1, line('$'), '']]
-    while lnums[index] != bound && line ==# '' || !(stridx(line,trim(l,"",2)) || line[strlen(line)-strlen(r) : -1] != r)
+  for [index, dir, bound, line] in [[0, -1, 1, v:null], [1, 1, line('$'), v:null]]
+    while lnums[index] != bound && line is# v:null || !(stridx(line,trim(l,"",2)) || line[strlen(line)-strlen(r) : -1] != r)
       let lnums[index] += dir
       let line = matchstr(getline(lnums[index]+dir),'\S.*\s\@<!')
       let [l, r] = s:strip_white_space(l,r,line)
