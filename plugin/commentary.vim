@@ -72,9 +72,11 @@ function! s:go(...) abort
     if force_uncomment
       if line =~ '^\s*' . l
         let line = substitute(line,'\S.*\s\@<!','\=submatch(0)[strlen(l):-strlen(r)-1]','')
+        if line !~# '\S' | let line = '' | endif
       endif
     elseif uncomment
       let line = substitute(line,'\S.*\s\@<!','\=submatch(0)[strlen(l):-strlen(r)-1]','')
+      if line !~# '\S' | let line = '' | endif
     else
       if empty(trim(line))
         let line = minindent . l . r
