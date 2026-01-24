@@ -54,6 +54,9 @@ function! s:go(...) abort
       let uncomment = 0
     endif
   endfor
+  if !uncomment
+    let [l, r] = s:surroundings()
+  endif
 
   if get(b:, 'commentary_startofline')
     let indent = '^'
