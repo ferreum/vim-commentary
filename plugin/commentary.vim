@@ -82,7 +82,7 @@ function! s:go(...) abort
       if line !~# '\S' | let line = '' | endif
     else
       if empty(trim(line))
-        let line = minindent . l . r
+        let line = minindent . (!empty(r) ? l : trim(l,"",2)) . r
       else
         let line = substitute(line,'^\%(\s\{'.len(minindent).'}\|\s*\)\zs.*','\=l.submatch(0).r','')
       endif
