@@ -52,6 +52,10 @@ function! s:go(...) abort
     let [l, r] = s:strip_white_space(l,r,line)
     if stridx(line,trim(l,"",2)) || line[strlen(line)-strlen(r) : -1] != r
       let uncomment = 0
+    else
+      if stridx(line . matchstr(l,'\s*$'),l)
+        let l = trim(l,"",2)
+      endif
     endif
   endfor
   if !uncomment
@@ -81,7 +85,7 @@ function! s:go(...) abort
       let line = substitute(line,'\S.*\s\@<!','\=submatch(0)[strlen(l):-strlen(r)-1]','')
       if line !~# '\S' | let line = '' | endif
     else
-      if empty(trim(line))
+      if line !~# '\S
         let line = minindent . (!empty(r) ? l : trim(l,"",2)) . r
       else
         let line = substitute(line,'^\%(\s\{'.len(minindent).'}\|\s*\)\zs.*','\=l.submatch(0).r','')
